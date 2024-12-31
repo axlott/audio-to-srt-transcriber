@@ -1,0 +1,7 @@
+build/
+dist/
+output/
+
+.idea/
+
+main.spec
