@@ -1,1 +1,1 @@
-openai-whisper~=20240930
+git+https://github.com/openai/whisper.git
