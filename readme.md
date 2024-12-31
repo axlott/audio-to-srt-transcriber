@@ -27,3 +27,17 @@ This Python application transcribes audio files (WAV or MP3) into subtitle files
 
 ## Output:
 - The transcribed subtitle files are saved in an "output" directory.
+
+## Package to an executable:
+
+```bash
+pip install pyinstaller
+```
+
+Make sure pyinstaller is in your PATH
+
+```bash
+pyinstaller --onefile --noconsole --add-data "<path-to-whisper-package>;whisper/" .\main.py
+```
+
+Check pyinstaller docs for more details
