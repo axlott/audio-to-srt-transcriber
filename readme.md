@@ -40,4 +40,9 @@ Make sure pyinstaller is in your PATH
 pyinstaller --onefile --noconsole --add-data "<path-to-whisper-package>;whisper/" .\main.py
 ```
 
+Package without debug code:
+```bash
+PYTHONOPTIMIZE=2 pyinstaller --onefile --noconsole --add-data "<path-to-whisper-package>;whisper/" .\main.py
+```
+
 Check pyinstaller docs for more details
