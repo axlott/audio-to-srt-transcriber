@@ -1,12 +1,13 @@
-from datetime import timedelta
-
-import whisper
-import tkinter as tk
-from tkinter import filedialog, messagebox
+import logging
+import os
 import subprocess
 import sys
-import os
-import logging
+import tkinter as tk
+from datetime import timedelta
+from tkinter import filedialog, messagebox
+
+import whisper
+
 
 def setup_logging():
     if not os.path.exists("logs"):
@@ -18,6 +19,7 @@ def setup_logging():
         format='%(asctime)s - %(levelname)s - %(message)s',
         level=logging.INFO
     )
+
 
 def transcribe_audio(path):
     model = whisper.load_model("base")
@@ -33,7 +35,8 @@ def transcribe_audio(path):
         messagebox.showinfo("DEBUG", f"expected filename: {srt_filename}")
 
     for segment in segments:
-        start_time = str(0)+str(timedelta(seconds=int(segment['start'])))+',000'
+        start_time = str(
+            0)+str(timedelta(seconds=int(segment['start'])))+',000'
         end_time = str(0)+str(timedelta(seconds=int(segment['end'])))+',000'
         text = segment['text']
         segment_id = segment['id']+1
@@ -49,10 +52,11 @@ def transcribe_audio(path):
 
     return srt_filename
 
+
 def select_files():
     file_paths = filedialog.askopenfilenames(
         title="Select WAV or MP3 Files",
-        filetypes=(("Audio Files", "*.wav;*.mp3"), ("All Files", "*.*"))
+        filetypes=(("Audio Files", "*.wav *.mp3"), ("All Files", "*.*"))
     )
     if file_paths:
         file_list_var.set("\n".join(file_paths))
@@ -74,6 +78,7 @@ def start_processing():
         messagebox.showerror("Error", f"An error occurred: {e}")
         logging.error(f"error: {e}")
 
+
 def open_file(event):
     selected_index = output_listbox.curselection()
     if selected_index:
@@ -83,10 +88,12 @@ def open_file(event):
             if os.name == 'nt':  # Windows
                 os.startfile(selected_file)
             elif os.name == 'posix':  # macOS or Linux
-                subprocess.run(['open' if sys.platform == 'darwin' else 'xdg-open', selected_file])
+                subprocess.run(['open' if sys.platform ==
+                               'darwin' else 'xdg-open', selected_file])
         except Exception as e:
             messagebox.showerror("Error", f"Cannot open file: {e}")
             logging.error(f"error: {e}")
+
 
 if __name__ == '__main__':
     setup_logging()
@@ -99,15 +106,18 @@ if __name__ == '__main__':
 
     tk.Label(file_frame, text="Input Files:").grid(row=0, column=0, sticky="w")
     file_list_var = tk.StringVar()
-    tk.Entry(file_frame, textvariable=file_list_var, width=50, state="disabled").grid(row=1, column=0, padx=5, pady=5)
-    tk.Button(file_frame, text="Browse", command=select_files).grid(row=1, column=1, padx=5)
+    tk.Entry(file_frame, textvariable=file_list_var, width=50,
+             state="disabled").grid(row=1, column=0, padx=5, pady=5)
+    tk.Button(file_frame, text="Browse", command=select_files).grid(
+        row=1, column=1, padx=5)
 
     tk.Button(root, text="Transcribe", command=start_processing).pack(pady=10)
 
     output_frame = tk.Frame(root)
     output_frame.pack(pady=10)
 
-    tk.Label(output_frame, text="Generated SRT Files:").grid(row=0, column=0, sticky="w")
+    tk.Label(output_frame, text="Generated SRT Files:").grid(
+        row=0, column=0, sticky="w")
     output_listbox = tk.Listbox(output_frame, width=100, height=10)
     output_listbox.grid(row=1, column=0, padx=5, pady=5)
     output_listbox.bind("<Double-1>", open_file)
